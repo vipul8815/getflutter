@@ -2,25 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:getflutter/colors/gf_color.dart';
-import 'package:getflutter/components/tabs/gf_tabBarView.dart';
-import 'package:getflutter/components/tabs/gf_tabBar.dart';
-
-/// Creates a default tab for the given [child] widget.
-///
-/// The [length] argument is typically greater than one. The [length] must
-/// match [GFTabBar.tabs]'s and [GFTabBarView.children]'s length.
-///
-/// The [initialIndex] argument must not be null.
+import 'package:getflutter/getflutter.dart';
 
 class GFTabs extends StatefulWidget {
-  /// Creates a default tab for the given [child] widget.
+  /// Creates a default tab for the given child widget.
   ///
   /// The [length] argument is typically greater than one. The [length] must
   /// match [GFTabBar.tabs]'s and [GFTabBarView.children]'s length.
   ///
   /// The [initialIndex] argument must not be null.
-  GFTabs({
+  const GFTabs({
     Key key,
     this.initialIndex = 0,
     @required this.length,
@@ -40,10 +31,12 @@ class GFTabs extends StatefulWidget {
     this.tabs,
     this.controller,
     this.tabBarHeight,
+    this.shape,
   })  : assert(length != null && length >= 0),
         assert(initialIndex != null &&
             initialIndex >= 0 &&
-            (length == 0 || initialIndex < length));
+            (length == 0 || initialIndex < length)),
+        super(key: key);
 
   /// The initial index of the selected tab. Defaults to zero.
   final int initialIndex;
@@ -76,7 +69,7 @@ class GFTabs extends StatefulWidget {
 
   /// The horizontal padding for the line that appears below the selected tab.
   ///
-  /// For [isScrollable] tab bars, specifying [kTabLabelPadding] will align
+  /// For isScrollable tab bars, specifying [kTabLabelPadding] will align
   /// the indicator with the tab's text for [Tab] widgets and all but the
   /// shortest [Tab.text] values.
   ///
@@ -171,45 +164,45 @@ class GFTabs extends StatefulWidget {
   /// defines the tabBar height
   final double tabBarHeight;
 
+  /// defines the shape of tabBar
+  final ShapeBorder shape;
+
   @override
   _GFTabsState createState() => _GFTabsState();
 }
 
 class _GFTabsState extends State<GFTabs> {
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: DefaultTabController(
-        initialIndex: widget.initialIndex,
-        length: widget.length,
-        child: Container(
-          height: widget.height == null
-              ? MediaQuery.of(context).size.height * 0.5
-              : widget.height,
-          child: Column(
-            children: <Widget>[
-              GFTabBar(
-                length: widget.length,
-                initialIndex: widget.initialIndex,
-                tabBarHeight: widget.tabBarHeight,
-                tabBarColor: widget.tabBarColor ?? getGFColor(GFColor.primary),
-                controller: widget.controller,
-                labelColor: widget.labelColor,
-                unselectedLabelColor: widget.unselectedLabelColor,
-                labelStyle: widget.labelStyle,
-                unselectedLabelStyle: widget.unselectedLabelStyle,
-                indicatorColor: widget.indicatorColor,
-                indicatorSize: widget.indicatorSize,
-                indicator: widget.indicator,
-                indicatorPadding: widget.indicatorPadding,
-                indicatorWeight: widget.indicatorWeight,
-                tabs: widget.tabs,
-              ),
-              Expanded(child: widget.tabBarView),
-            ],
+  Widget build(BuildContext context) => Container(
+        child: DefaultTabController(
+          initialIndex: widget.initialIndex,
+          length: widget.length,
+          child: Container(
+            height: widget.height ?? MediaQuery.of(context).size.height * 0.5,
+            child: Column(
+              children: <Widget>[
+                GFTabBar(
+                  shape: widget.shape,
+                  length: widget.length,
+                  initialIndex: widget.initialIndex,
+                  tabBarHeight: widget.tabBarHeight,
+                  tabBarColor: widget.tabBarColor ?? GFColors.PRIMARY,
+                  controller: widget.controller,
+                  labelColor: widget.labelColor,
+                  unselectedLabelColor: widget.unselectedLabelColor,
+                  labelStyle: widget.labelStyle,
+                  unselectedLabelStyle: widget.unselectedLabelStyle,
+                  indicatorColor: widget.indicatorColor,
+                  indicatorSize: widget.indicatorSize,
+                  indicator: widget.indicator,
+                  indicatorPadding: widget.indicatorPadding,
+                  indicatorWeight: widget.indicatorWeight,
+                  tabs: widget.tabs,
+                ),
+                Expanded(child: widget.tabBarView),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }
